@@ -20,10 +20,12 @@ psql -U $CRATEDB_USERNAME -h $CRATEDB_HOST -t -c '\timing' -c "
   FROM 'https://datasets.clickhouse.com/hits_compatible/hits.tsv.gz'
   WITH
   (
-    "delimiter"=e'\t',
-    "format"='csv',
-    "header"=false,
-    "empty_string_as_null"=TRUE
+    "delimiter" = e'\t',
+    "format" = 'csv',
+    "header" = FALSE,
+    "empty_string_as_null" = TRUE,
+    "compression" = 'gzip',
+    "shared" = TRUE
   )
   RETURN SUMMARY;"
 
@@ -32,7 +34,8 @@ psql -U $CRATEDB_USERNAME -h $CRATEDB_HOST -t -c '\timing' -c "
 # {"Missing closing quote for value\n at [Source: UNKNOWN; line: 1, column: 1069]":{"count":1,"line_numbers":[93557187]}}
 # Time: 10687056.069 ms (02:58:07.056)
 echo "Refreshing table"
-psql -U $CRATEDB_USERNAME -h $CRATEDB_HOST -t -c "REFRESH TABLE hits; OPTIMIZE TABLE hits;"
+psql -U $CRATEDB_USERNAME -h $CRATEDB_HOST -t -c "ANALYZE;"
+psql -U $CRATEDB_USERNAME -h $CRATEDB_HOST -t -c "REFRESH TABLE hits; OPTIMIZE TABLE hits WITH (max_num_segments = 1);"
 
 # Some queries don't fit into the available heap space and raise an CircuitBreakingException
 echo "Starting queries"

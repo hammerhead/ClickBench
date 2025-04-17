@@ -1,12 +1,7 @@
 #!/bin/bash
 
-CRATEDB_HOST=$1
-CRATEDB_USERNAME=$2
-CRATEDB_PASSWORD=$3
 TRIES=3
 FILE_NAME="queries-tuned.sql"
-
-export PGPASSWORD=$CRATEDB_PASSWORD
 
 cat $FILE_NAME | while read -r query; do
     echo "$query";

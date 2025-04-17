@@ -110,7 +110,7 @@ CREATE TABLE hits (
 )
 CLUSTERED INTO 6 SHARDS
 WITH (
-    --"refresh_interval" = 0,
-    --"translog.durability" = 'ASYNC',
+    "refresh_interval" = 0,
+    "translog.durability" = 'ASYNC',
     "number_of_replicas" = 0
 );
